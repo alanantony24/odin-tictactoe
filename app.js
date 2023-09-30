@@ -48,6 +48,7 @@ const Game = (() => {
   let gameOver = false;
 
   const start = () => {
+    const squares = document.querySelectorAll(".square");
     players = [
       createPlayer(document.querySelector("#player1").value, "X"),
       createPlayer(document.querySelector("#player2").value, "0"),
@@ -55,7 +56,6 @@ const Game = (() => {
     currentPlayerIndex = 0;
     gameOver = false;
     Gameboard.render();
-    const squares = document.querySelectorAll(".square");
     squares.forEach((square) => {
       square.addEventListener("click", handleClick);
     });
@@ -75,9 +75,15 @@ const Game = (() => {
       displayController.renderMessage(
         `${players[currentPlayerIndex].name} wins`
       );
+      squares.forEach((square) => {
+        square.removeEventListener("click", handleClick, false);
+      });
     } else if (checkForTie(Gameboard.getGameBoard())) {
       gameOver = true;
       displayController.renderMessage("It's a tie");
+      squares.forEach((square) => {
+        square.removeEventListener("click", handleClick, false);
+      });
     }
 
     currentPlayerIndex = currentPlayerIndex === 0 ? 1 : 0;

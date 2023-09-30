@@ -9,13 +9,21 @@ const Gameboard = (() => {
     const squares = document.querySelectorAll(".square");
     squares.forEach((square) => {
       square.addEventListener("click", Game.handleClick);
-    })
-  };
-  
-  return {
-    render
+    });
   };
 
+  const update = (index, value) => {
+    gameboard[index] = value;
+    render();
+  };
+
+  const getGameBoard = () => gameboard;
+
+  return {
+    render,
+    update,
+    getGameBoard
+  };
 })();
 
 const createPlayer = (name, mark) => {
@@ -38,17 +46,25 @@ const Game = (() => {
     currentPlayerIndex = 0;
     gameOver = false;
     Gameboard.render();
+    const squares = document.querySelectorAll(".square");
+    squares.forEach((square) => {
+      square.addEventListener("click", handleClick);
+    });
   };
 
   const handleClick = (event) => {
     let index = parseInt(event.target.id.split("-")[1]);
-    console.log(index);
-  }
+    if (Gameboard.getGameBoard()[index] !== "") {
+      return;
+    }
+    Gameboard.update(index, players[currentPlayerIndex].mark);
+    currentPlayerIndex = currentPlayerIndex === 0 ? 1 : 0;
+  };
 
   return {
     start,
-    handleClick
-  }
+    handleClick,
+  };
 })();
 
 const startButton = document.querySelector("#start-button");
